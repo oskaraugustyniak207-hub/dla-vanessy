@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Ozdobne elementy w tle */
         body::before, body::after {
             content: "❤️";
             position: absolute;
@@ -50,9 +49,11 @@
             transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
         }
 
-        .fade-out {
-            opacity: 0;
-            transform: translateY(10px) scale(0.98);
+        .fade-out { opacity: 0; transform: translateY(10px) scale(0.98); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
@@ -63,16 +64,11 @@
             line-height: 1.25;
         }
 
-        p.subtitle {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
+        p.subtitle { color: #555; font-size: 15px; margin-bottom: 20px; line-height: 1.4; }
 
         .img-container {
             width: 100%;
-            height: 190px;
+            height: 250px; /* Zwiększyłem wysokość, by lepiej pasowała do Twoich zdjęć */
             border-radius: 18px;
             overflow: hidden;
             margin-bottom: 15px;
@@ -82,12 +78,10 @@
             align-items: center;
             justify-content: center;
         }
-
         .img-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease-in-out;
+            object-fit: cover; /* Zdjęcie wypełni kontener, ucinając boki, jeśli trzeba, ale zachowując proporcje */
         }
 
         .btn-option {
@@ -102,29 +96,14 @@
             width: 100%;
             cursor: pointer;
             transition: all 0.25s ease;
+            opacity: 0; 
+            animation: fadeInUp 0.5s ease forwards;
         }
 
-        .btn-option:active {
-            transform: scale(0.97);
-        }
+        .btn-option:active { transform: scale(0.97); }
+        .btn-large { padding: 20px 18px; font-size: 17px; background: #ff6b81; color: white; border: none; box-shadow: 0 6px 18px rgba(255, 107, 129, 0.35); }
 
-        .btn-large {
-            padding: 20px 18px;
-            font-size: 17px;
-            background: #ff6b81;
-            color: white;
-            border: none;
-            box-shadow: 0 6px 18px rgba(255, 107, 129, 0.35);
-        }
-
-        .feedback {
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            min-height: 24px;
-            transition: opacity 0.3s ease;
-        }
-
+        .feedback { margin-top: 10px; font-weight: bold; font-size: 15px; min-height: 24px; transition: opacity 0.3s ease; }
         .correct { color: #2ed573; }
         .wrong { color: #ff4757; }
         .hidden { display: none !important; }
@@ -142,45 +121,41 @@
             width: 100%;
             transition: all 0.25s ease;
         }
-
-        .next-btn:active {
-            transform: scale(0.97);
-        }
-
+        
         .letter-box {
             background: #fff0f3;
             border: 1px dashed #ff6b81;
             border-radius: 18px;
-            padding: 18px;
+            padding: 22px;
             margin-top: 15px;
             text-align: left;
             color: #444;
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.6;
+            box-shadow: inset 0 2px 6px rgba(255,107,129,0.1);
         }
     </style>
 </head>
 <body>
 
 <div class="card" id="main-card">
-    <!-- EKRAN STARTOWY -->
     <div id="start-screen">
         <div>
             <h1>Wszystkiego najlepszego kotek ❤️</h1>
             <p class="subtitle">Zrobiłem dla ciebie krótki quiz zobaczymy jak ci pójdzie</p>
         </div>
         <div class="img-container">
-            <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" alt="Start photo">
+            <!-- Twoje zdjęcie startowe -->
+            <img src="zdjecie_start.jpg" alt="Start">
         </div>
         <button class="next-btn" onclick="startQuiz()">Zaczynamy! ➔</button>
     </div>
 
-    <!-- EKRAN QUIZU -->
     <div id="quiz-screen" class="hidden">
         <div>
             <h1 id="question-title">Pytanie</h1>
             <div class="img-container">
-                <img id="question-img" src="" alt="Zdjęcie do pytania">
+                <img id="question-img" src="" alt="Pytanie">
             </div>
             <div id="options-container"></div>
             <div id="feedback" class="feedback"></div>
@@ -188,16 +163,20 @@
         <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Dalej ➔</button>
     </div>
 
-    <!-- EKRAN KOŃCOWY -->
     <div id="end-screen" class="hidden">
         <div>
             <h1>Brawo Kotek! 💕</h1>
             <p class="subtitle">Wiedziałem, że dasz radę!</p>
             <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=500" alt="End photo">
+                <!-- Twoje zdjęcie końcowe -->
+                <img src="zdjecie_koniec.jpg" alt="Koniec">
             </div>
             <div id="letter-placeholder" class="letter-box">
-                <p><i>[TUTAJ WKLEIMY TWÓJ LIST Z ŻYCZENIAMI]</i></p>
+                <!-- TUTAJ WKLEIŁEM LIST Z POPRZEDNIEJ WIADOMOŚCI -->
+                <p>Kiciu,</p><br>
+                <p>Wszystkiego najlepszego z okazji urodzin! ❤️ Życzę Ci, żeby ten dzień był tak wspaniały i wyjątkowy, jak Ty jesteś dla mnie. Dziękuję Ci za każdą wspólną chwilę, za Twój uśmiech (nawet ten, który próbujesz ukryć) i za to, że po prostu jesteś. Pamiętaj, że kocham Cię całą i zawsze możesz na mnie liczyć. Mam nadzieję, że prezent Ci się spodoba i ten mały quiz też sprawił Ci trochę radości.</p><br>
+                <p>Zawsze Twój,</p>
+                <p><b>[Twoje Imię]</b></p> <!-- Pamiętaj, by tu wpisać swoje imię! -->
             </div>
         </div>
     </div>
@@ -207,7 +186,7 @@
     const questions = [
         {
             title: "Pamiętasz nasz inside joke z pierwszej randki?",
-            img: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500",
+            img: "pytanie_joke.jpg", // Twoje smutne zdjęcie
             options: [
                 { text: "Freddy", correct: false },
                 { text: "Śpuścizna", correct: true },
@@ -218,7 +197,7 @@
         },
         {
             title: "Myślisz że co najbardziej w tobie kocham?",
-            img: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500",
+            img: "zdjecie_smutne.jpg", // Zamieniłem zdjęcie farb na Twoje smutne na poduszce, by lepiej pasowało do pytania o miłość, kiedy jesteś "słodka"
             options: [
                 { text: "Oczy", correct: false },
                 { text: "Charakter", correct: false },
@@ -229,7 +208,7 @@
         },
         {
             title: "Kto jest moim takim słodkim koteczkiem?",
-            img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500",
+            img: "pytanie_kotek.jpg", // Twoje zdjęcie z farbami (do pytania o koteczka)
             options: [
                 { text: "Jesteś taki głupi", correct: false },
                 { text: "No jaaaa misiu", correct: true },
@@ -240,7 +219,7 @@
         },
         {
             title: "Czy jesteś gotowa na to?",
-            img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=500",
+            img: "pytanie_gotowa.jpg", // Twoje zdjęcie patrzące na siebie (różowa bluza)
             options: [
                 { text: "Takkk", correct: true },
                 { text: "Nie wiem", correct: false },
@@ -251,7 +230,7 @@
         },
         {
             title: "Ale czy aby napewno jesteś gotowa?",
-            img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500",
+            img: "zdjecie_dziobek.jpg", // Twoje zdjęcie z dzióbkiem (czapeczka, czarna koszulka)
             isBigButton: true,
             options: [
                 { text: "TAK DEFINITYWNIE O TAKK", correct: true }
@@ -290,10 +269,11 @@
         const container = document.getElementById('options-container');
         container.innerHTML = '';
 
-        q.options.forEach((opt) => {
+        q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = q.isBigButton ? 'btn-option btn-large' : 'btn-option';
             btn.innerText = opt.text;
+            btn.style.animationDelay = (index * 0.15) + 's';
             btn.onclick = () => checkAnswer(opt.correct, q.correctText, q.wrongText);
             container.appendChild(btn);
         });
@@ -301,7 +281,6 @@
 
     function checkAnswer(isCorrect, correctMsg, wrongMsg) {
         const feedback = document.getElementById('feedback');
-        
         if (isCorrect) {
             feedback.innerText = correctMsg;
             feedback.className = 'feedback correct';
