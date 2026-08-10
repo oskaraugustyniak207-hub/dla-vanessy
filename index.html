@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wspomnienia z Vanessą 💕</title>
+    <title>Dla Vanessy ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,7 +17,7 @@
             padding: 20px;
         }
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 30px 20px;
@@ -31,11 +31,13 @@
             color: #ff6b81;
             font-size: 26px;
             margin-bottom: 15px;
+            line-height: 1.2;
         }
         p.subtitle {
             color: #555;
             font-size: 15px;
             margin-bottom: 25px;
+            line-height: 1.4;
         }
         .btn-option {
             background: #ffffff;
@@ -71,6 +73,18 @@
             font-weight: bold;
             margin-top: 15px;
             cursor: pointer;
+            font-size: 15px;
+        }
+        .letter-box {
+            background: #fff0f3;
+            border: 1px dashed #ff6b81;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -79,9 +93,9 @@
 <div class="card">
     <!-- EKRAN STARTOWY -->
     <div id="start-screen">
-        <h1>Wszystkiego Najlepszego Vanessa! 🎉</h1>
-        <p class="subtitle">Sprawdźmy, jak dobrze pamiętasz nasze wspólne chwile. Gotowa na mały quiz?</p>
-        <button class="next-btn" onclick="startQuiz()">Zaczynamy! ❤️</button>
+        <h1>Wszystkiego najlepszego kotek ❤️</h1>
+        <p class="subtitle">Zrobiłem dla ciebie krótki quiz zobaczymy jak ci pójdzie</p>
+        <button class="next-btn" onclick="startQuiz()">Zaczynamy! ➔</button>
     </div>
 
     <!-- EKRAN QUIZU -->
@@ -89,38 +103,34 @@
         <h1 id="question-title">Pytanie</h1>
         <div id="options-container"></div>
         <div id="feedback" class="feedback"></div>
-        <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Następne pytanie ➔</button>
+        <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Dalej ➔</button>
     </div>
 
     <!-- EKRAN KOŃCOWY -->
     <div id="end-screen" class="hidden">
-        <h1>Brawo Myszko! ❤️</h1>
-        <p class="subtitle">Poszło Ci świetnie! Pamiętasz wszystko idealnie. Wygląda na to, że pora na odbiór nagrody... 🎁</p>
+        <h1>Brawo Kotek! 💕</h1>
+        <p class="subtitle">Pamiętasz wszystko idealnie!</p>
+        <div id="letter-placeholder" class="letter-box">
+            <p><i>[Miejsce na Twój list - dokleimy go tutaj, jak tylko mi go napiszesz!]</i></p>
+        </div>
     </div>
 </div>
 
 <script>
     const questions = [
         {
-            title: "Pytanie 1: Pamiętasz naszą pierwszą randkę?",
-            options: ["Jasne, że tak!", "Coś tam świta...", "Chyba zjadłem wtedy za dużo 😅"],
-            correctIndex: 0,
-            correctText: "Super! Dokładnie tak było! ❤️",
-            wrongText: "Spróbuj jeszcze raz! 😉"
+            title: "Pamiętasz nasz inside joke z pierwszej randki?",
+            options: ["Freddy", "Śpuścizna", "Domynyk"],
+            correctIndex: 1,
+            correctText: "Dokładnie tak! 😂❤️",
+            wrongText: "Oj nie... spróbuj jeszcze raz! 😉"
         },
         {
-            title: "Pytanie 2: Co najbardziej w Tobie uwielbiam?",
-            options: ["Twój uśmiech", "Twój charakter", "Wszystko po trochu!"],
+            title: "Myślisz że co najbardziej w tobie kocham?",
+            options: ["Oczy", "Charakter", "Całaaa ciebie"],
             correctIndex: 2,
-            correctText: "Dokładnie, wszystko w pakiecie! ✨",
-            wrongText: "Blisko, ale odpowiedź jest jeszcze prostsza!"
-        },
-        {
-            title: "Pytanie 3: Gotowa na prezent?",
-            options: ["Dajesz!", "Oczywiście!", "Nie mogę się doczekać!"],
-            correctIndex: 0, // Każda odpowiedź jest tu dobra, kliknięcie czegokolwiek przechodzi dalej
-            correctText: "No to otwieraj! 🎁",
-            wrongText: ""
+            correctText: "Pewnie, że całą Ciebie! 💕",
+            wrongText: "Blisko, ale pomyśl o wszystkim w pakiecie!"
         }
     ];
 
@@ -154,7 +164,7 @@
         const q = questions[currentQ];
         const feedback = document.getElementById('feedback');
         
-        if (idx === q.correctIndex || currentQ === 2) {
+        if (idx === q.correctIndex) {
             feedback.innerText = q.correctText;
             feedback.className = 'feedback correct';
             document.getElementById('next-btn').classList.remove('hidden');
