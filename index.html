@@ -14,37 +14,59 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 20px 15px;
         }
         .card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 30px 20px;
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            max-width: 420px;
             width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            min-height: 520px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         h1 {
             font-family: 'Fredoka One', cursive;
             color: #ff6b81;
-            font-size: 26px;
-            margin-bottom: 15px;
-            line-height: 1.2;
+            font-size: 25px;
+            margin-bottom: 12px;
+            line-height: 1.25;
         }
         p.subtitle {
             color: #555;
             font-size: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.4;
+        }
+        .img-container {
+            width: 100%;
+            height: 190px;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            background: #ffe6ea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.4s ease-in-out;
         }
         .btn-option {
             background: #ffffff;
             border: 2px solid #ffd1dc;
             color: #444;
             padding: 14px 18px;
-            margin: 10px 0;
+            margin: 7px 0;
             border-radius: 16px;
             font-size: 15px;
             font-weight: 700;
@@ -55,36 +77,45 @@
         .btn-option:active {
             transform: scale(0.98);
         }
+        .btn-large {
+            padding: 20px 18px;
+            font-size: 17px;
+            background: #ff6b81;
+            color: white;
+            border: none;
+            box-shadow: 0 6px 18px rgba(255, 107, 129, 0.35);
+        }
         .feedback {
-            margin-top: 15px;
+            margin-top: 10px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             min-height: 24px;
         }
         .correct { color: #2ed573; }
         .wrong { color: #ff4757; }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         .next-btn {
             background: #ff6b81;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: 14px;
             font-weight: bold;
             margin-top: 15px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
+            width: 100%;
         }
         .letter-box {
             background: #fff0f3;
             border: 1px dashed #ff6b81;
-            border-radius: 16px;
-            padding: 15px;
+            border-radius: 18px;
+            padding: 18px;
             margin-top: 15px;
             text-align: left;
             color: #444;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -93,25 +124,40 @@
 <div class="card">
     <!-- EKRAN STARTOWY -->
     <div id="start-screen">
-        <h1>Wszystkiego najlepszego kotek ❤️</h1>
-        <p class="subtitle">Zrobiłem dla ciebie krótki quiz zobaczymy jak ci pójdzie</p>
+        <div>
+            <h1>Wszystkiego najlepszego kotek ❤️</h1>
+            <p class="subtitle">Zrobiłem dla ciebie krótki quiz zobaczymy jak ci pójdzie</p>
+        </div>
+        <div class="img-container">
+            <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500" alt="Start photo">
+        </div>
         <button class="next-btn" onclick="startQuiz()">Zaczynamy! ➔</button>
     </div>
 
     <!-- EKRAN QUIZU -->
     <div id="quiz-screen" class="hidden">
-        <h1 id="question-title">Pytanie</h1>
-        <div id="options-container"></div>
-        <div id="feedback" class="feedback"></div>
+        <div>
+            <h1 id="question-title">Pytanie</h1>
+            <div class="img-container">
+                <img id="question-img" src="" alt="Zdjęcie do pytania">
+            </div>
+            <div id="options-container"></div>
+            <div id="feedback" class="feedback"></div>
+        </div>
         <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Dalej ➔</button>
     </div>
 
     <!-- EKRAN KOŃCOWY -->
     <div id="end-screen" class="hidden">
-        <h1>Brawo Kotek! 💕</h1>
-        <p class="subtitle">Pamiętasz wszystko idealnie!</p>
-        <div id="letter-placeholder" class="letter-box">
-            <p><i>[Miejsce na Twój list - dokleimy go tutaj, jak tylko mi go napiszesz!]</i></p>
+        <div>
+            <h1>Brawo Kotek! 💕</h1>
+            <p class="subtitle">Wiedziałem, że dasz radę!</p>
+            <div class="img-container">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=500" alt="End photo">
+            </div>
+            <div id="letter-placeholder" class="letter-box">
+                <p><i>[TUTAJ WKLEIMY TWÓJ LIST Z ŻYCZENIAMI]</i></p>
+            </div>
         </div>
     </div>
 </div>
@@ -120,17 +166,57 @@
     const questions = [
         {
             title: "Pamiętasz nasz inside joke z pierwszej randki?",
-            options: ["Freddy", "Śpuścizna", "Domynyk"],
-            correctIndex: 1,
+            img: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500",
+            options: [
+                { text: "Freddy", correct: false },
+                { text: "Śpuścizna", correct: true },
+                { text: "Domynyk", correct: false }
+            ],
             correctText: "Dokładnie tak! 😂❤️",
             wrongText: "Oj nie... spróbuj jeszcze raz! 😉"
         },
         {
             title: "Myślisz że co najbardziej w tobie kocham?",
-            options: ["Oczy", "Charakter", "Całaaa ciebie"],
-            correctIndex: 2,
+            img: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500",
+            options: [
+                { text: "Oczy", correct: false },
+                { text: "Charakter", correct: false },
+                { text: "Całaaa ciebie", correct: true }
+            ],
             correctText: "Pewnie, że całą Ciebie! 💕",
             wrongText: "Blisko, ale pomyśl o wszystkim w pakiecie!"
+        },
+        {
+            title: "Kto jest moim takim słodkim koteczkiem?",
+            img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500",
+            options: [
+                { text: "Jesteś taki głupi", correct: false },
+                { text: "No jaaaa misiu", correct: true },
+                { text: "Jezu jak ty mnie wkurzasz", correct: false }
+            ],
+            correctText: "No jasne, że Ty! 🥰",
+            wrongText: "Słabo... spróbuj wybrać ładniejszą odpowiedź! 😜"
+        },
+        {
+            title: "Czy jesteś gotowa na to?",
+            img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=500",
+            options: [
+                { text: "Takkk", correct: true },
+                { text: "Nie wiem", correct: false },
+                { text: "Oczywiscie ze tak misiuuu", correct: true }
+            ],
+            correctText: "Super! Idziemy dalej! ✨",
+            wrongText: "Musisz być gotowa! Spróbuj jeszcze raz 😉"
+        },
+        {
+            title: "Ale czy aby napewno jesteś gotowa?",
+            img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500",
+            isBigButton: true,
+            options: [
+                { text: "TAK DEFINITYWNIE O TAKK", correct: true }
+            ],
+            correctText: "No to lecimy z finałem! 🎉❤️",
+            wrongText: ""
         }
     ];
 
@@ -145,31 +231,31 @@
     function loadQuestion() {
         const q = questions[currentQ];
         document.getElementById('question-title').innerText = q.title;
+        document.getElementById('question-img').src = q.img;
         document.getElementById('feedback').innerText = '';
         document.getElementById('next-btn').classList.add('hidden');
 
         const container = document.getElementById('options-container');
         container.innerHTML = '';
 
-        q.options.forEach((opt, idx) => {
+        q.options.forEach((opt) => {
             const btn = document.createElement('button');
-            btn.className = 'btn-option';
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(idx);
+            btn.className = q.isBigButton ? 'btn-option btn-large' : 'btn-option';
+            btn.innerText = opt.text;
+            btn.onclick = () => checkAnswer(opt.correct, q.correctText, q.wrongText);
             container.appendChild(btn);
         });
     }
 
-    function checkAnswer(idx) {
-        const q = questions[currentQ];
+    function checkAnswer(isCorrect, correctMsg, wrongMsg) {
         const feedback = document.getElementById('feedback');
         
-        if (idx === q.correctIndex) {
-            feedback.innerText = q.correctText;
+        if (isCorrect) {
+            feedback.innerText = correctMsg;
             feedback.className = 'feedback correct';
             document.getElementById('next-btn').classList.remove('hidden');
         } else {
-            feedback.innerText = q.wrongText;
+            feedback.innerText = wrongMsg;
             feedback.className = 'feedback wrong';
         }
     }
