@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wspomnienia z Vanessą 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffd1dc 0%, #e6e6fa 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #ff6b81;
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+        p.subtitle {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+        .btn-option {
+            background: #ffffff;
+            border: 2px solid #ffd1dc;
+            color: #444;
+            padding: 14px 18px;
+            margin: 10px 0;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-option:active {
+            transform: scale(0.98);
+        }
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            min-height: 24px;
+        }
+        .correct { color: #2ed573; }
+        .wrong { color: #ff4757; }
+        .hidden { display: none; }
+        .next-btn {
+            background: #ff6b81;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- EKRAN STARTOWY -->
+    <div id="start-screen">
+        <h1>Wszystkiego Najlepszego Vanessa! 🎉</h1>
+        <p class="subtitle">Sprawdźmy, jak dobrze pamiętasz nasze wspólne chwile. Gotowa na mały quiz?</p>
+        <button class="next-btn" onclick="startQuiz()">Zaczynamy! ❤️</button>
+    </div>
+
+    <!-- EKRAN QUIZU -->
+    <div id="quiz-screen" class="hidden">
+        <h1 id="question-title">Pytanie</h1>
+        <div id="options-container"></div>
+        <div id="feedback" class="feedback"></div>
+        <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Następne pytanie ➔</button>
+    </div>
+
+    <!-- EKRAN KOŃCOWY -->
+    <div id="end-screen" class="hidden">
+        <h1>Brawo Myszko! ❤️</h1>
+        <p class="subtitle">Poszło Ci świetnie! Pamiętasz wszystko idealnie. Wygląda na to, że pora na odbiór nagrody... 🎁</p>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            title: "Pytanie 1: Pamiętasz naszą pierwszą randkę?",
+            options: ["Jasne, że tak!", "Coś tam świta...", "Chyba zjadłem wtedy za dużo 😅"],
+            correctIndex: 0,
+            correctText: "Super! Dokładnie tak było! ❤️",
+            wrongText: "Spróbuj jeszcze raz! 😉"
+        },
+        {
+            title: "Pytanie 2: Co najbardziej w Tobie uwielbiam?",
+            options: ["Twój uśmiech", "Twój charakter", "Wszystko po trochu!"],
+            correctIndex: 2,
+            correctText: "Dokładnie, wszystko w pakiecie! ✨",
+            wrongText: "Blisko, ale odpowiedź jest jeszcze prostsza!"
+        },
+        {
+            title: "Pytanie 3: Gotowa na prezent?",
+            options: ["Dajesz!", "Oczywiście!", "Nie mogę się doczekać!"],
+            correctIndex: 0, // Każda odpowiedź jest tu dobra, kliknięcie czegokolwiek przechodzi dalej
+            correctText: "No to otwieraj! 🎁",
+            wrongText: ""
+        }
+    ];
+
+    let currentQ = 0;
+
+    function startQuiz() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('question-title').innerText = q.title;
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('next-btn').classList.add('hidden');
+
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(idx) {
+        const q = questions[currentQ];
+        const feedback = document.getElementById('feedback');
+        
+        if (idx === q.correctIndex || currentQ === 2) {
+            feedback.innerText = q.correctText;
+            feedback.className = 'feedback correct';
+            document.getElementById('next-btn').classList.remove('hidden');
+        } else {
+            feedback.innerText = q.wrongText;
+            feedback.className = 'feedback wrong';
+        }
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
