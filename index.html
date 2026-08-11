@@ -21,6 +21,28 @@
             overflow: hidden;
         }
 
+        /* Przycisk odtwarzacza muzyki */
+        .music-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ff6b81;
+            color: #ff6b81;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .music-toggle:active { transform: scale(0.95); }
+
         .floating-heart {
             position: absolute;
             bottom: -50px;
@@ -64,7 +86,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Pasek postępu */
         .progress-bar-container {
             width: 100%;
             height: 10px;
@@ -147,7 +168,6 @@
             transition: all 0.25s ease;
         }
 
-        /* Licznik czasu */
         .timer-box {
             background: #fff;
             border: 2px solid #ffd1dc;
@@ -160,7 +180,6 @@
             font-weight: bold;
         }
 
-        /* Interaktywna koperta */
         .envelope-wrapper {
             margin-top: 10px;
             cursor: pointer;
@@ -194,9 +213,44 @@
             box-shadow: inset 0 2px 6px rgba(255,107,129,0.1);
             animation: fadeInUp 0.6s ease forwards;
         }
+
+        /* Przycisk Buziaka */
+        .kiss-btn {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 15px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 16px rgba(255, 71, 87, 0.3);
+            transition: all 0.2s ease;
+        }
+        .kiss-btn:active { transform: scale(0.96); }
+
+        .kiss-msg {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ff4757;
+            font-weight: bold;
+            animation: fadeInUp 0.4s ease forwards;
+        }
     </style>
 </head>
 <body>
+
+<!-- Audio element z muzyką -->
+<audio id="bg-music" loop>
+    <source src="careless_whisper.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Przycisk Muzyki w rogu -->
+<button class="music-toggle" onclick="toggleMusic()">
+    <span id="music-icon">🎵</span> <span id="music-text">Włącz muzykę</span>
+</button>
 
 <div id="hearts-container"></div>
 
@@ -241,25 +295,47 @@
                 <img src="247602a4-804a-4899-99f4-9697f4103767.jpg" alt="Koniec">
             </div>
 
-            <!-- Ukryta koperta -->
             <div id="envelope-container" class="envelope-wrapper" onclick="openLetter()">
                 <div class="envelope-btn">
                     ✉️ Kliknij, aby otworzyć list dla Ciebie!
                 </div>
             </div>
 
-            <!-- Treść listu po otwarciu -->
             <div id="letter-placeholder" class="letter-box hidden">
                 <p>Koteczek mój,</p><br>
                 <p>Wreszcie Twoja wymarzona osiemnastka! 🎉 Impreza będzie sztosem, życzę Ci wszystkiego co najlepsze, żeby ten dzień był tak wspaniały i wyjątkowy, jak Ty jesteś dla mnie. Dziękuję Ci za każdą wspólną chwilę, Twój piękny uśmiech i za to, że po prostu ze mną jesteś. Pamiętaj, że kocham Cię całą i zawsze możesz na mnie liczyć. Mam nadzieję, że prezent Ci się spodoba i ten mały quiz wywołał u Ciebie uśmiech na twarzy!</p><br>
                 <p>Zawsze Twój,</p>
                 <p><b>Twój Misiu</b></p>
+
+                <!-- Przycisk Buziaka -->
+                <button class="kiss-btn" onclick="sendKiss()">Wyślij buziaka Misiowi! 💋</button>
+                <div id="kiss-msg" class="kiss-msg hidden">
+                    Buziak wysłany! 😘 Zgłoś się do mnie po odbiór w rzeczywistości ❤️
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Obsługa muzyki Careless Whisper
+    const music = document.getElementById('bg-music');
+    let isPlaying = false;
+
+    function toggleMusic() {
+        if (isPlaying) {
+            music.pause();
+            document.getElementById('music-icon').innerText = '🎵';
+            document.getElementById('music-text').innerText = 'Włącz muzykę';
+            isPlaying = false;
+        } else {
+            music.play();
+            document.getElementById('music-icon').innerText = '🎶';
+            document.getElementById('music-text').innerText = 'Pauza';
+            isPlaying = true;
+        }
+    }
+
     // Pływające serca
     const heartsContainer = document.getElementById('hearts-container');
     const heartSymbols = ['❤️', '💖', '💕', '💗', '✨'];
@@ -277,7 +353,7 @@
     }
     setInterval(createHeart, 600);
 
-    // Licznik wspólnego czasu (od 27 listopada 2023)
+    // Licznik wspólnego czasu
     const startDate = new Date('2023-11-27T00:00:00');
 
     function updateTimer() {
@@ -365,6 +441,11 @@
     }
 
     function startQuiz() {
+        // Autostart muzyki przy pierwszym kliknięciu (przeglądarki często blokują autostart bez kliknięcia)
+        if (!isPlaying) {
+            toggleMusic();
+        }
+        
         animateTransition(() => {
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
@@ -379,7 +460,6 @@
         document.getElementById('feedback').innerText = '';
         document.getElementById('next-btn').classList.add('hidden');
 
-        // Aktualizacja paska postępu
         const progress = ((currentQ + 1) / questions.length) * 100;
         document.getElementById('progress-bar').style.width = progress + '%';
 
@@ -425,6 +505,18 @@
     function openLetter() {
         document.getElementById('envelope-container').classList.add('hidden');
         document.getElementById('letter-placeholder').classList.remove('hidden');
+    }
+
+    function sendKiss() {
+        document.getElementById('kiss-msg').classList.remove('hidden');
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 50,
+                spread: 70,
+                origin: { y: 0.7 },
+                colors: ['#ff4757', '#ff6b81', '#ffffff']
+            });
+        }
     }
 
     function triggerCelebration() {
