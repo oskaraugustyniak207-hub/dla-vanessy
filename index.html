@@ -10,6 +10,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Quicksand', sans-serif; background: linear-gradient(135deg, #ffd1dc 0%, #e6e6fa 100%); min-height: 100dvh; display: flex; justify-content: center; align-items: center; padding: 10px; overflow-x: hidden; position: relative; }
 
+        /* Muzyka */
         .music-banner { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #ff6b81; color: white; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 4px 12px rgba(255, 107, 129, 0.4); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } 100% { transform: translateX(-50%) scale(1); } }
 
@@ -20,17 +21,21 @@
         .img-container img { width: 100%; height: 100%; object-fit: cover; }
         .next-btn { background: #ff6b81; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
         
+        /* Quiz i elementy */
+        .btn-option { background: #fff; border: 2px solid #ffd1dc; padding: 12px; margin: 5px 0; border-radius: 12px; width: 100%; cursor: pointer; font-weight: bold; }
+        .progress-bar-container { width: 100%; height: 8px; background: #eee; border-radius: 4px; margin-bottom: 10px; }
+        .progress-bar { height: 100%; background: #ff6b81; width: 0%; border-radius: 4px; transition: width 0.3s; }
+        .letter-box { background: #fff0f3; padding: 15px; border-radius: 15px; text-align: left; margin-top: 10px; font-size: 14px; }
+
         /* Prezent */
         .gift-box { font-size: 80px; cursor: pointer; animation: bounce 2s infinite; margin: 20px 0; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .gift-msg { font-size: 20px; color: #ff6b81; font-weight: bold; margin: 20px 0; animation: fadeInUp 0.5s; }
+        .gift-msg { font-size: 20px; color: #ff6b81; font-weight: bold; margin: 20px 0; }
 
-        /* Reszta styli */
+        /* Popup i reszta */
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .popup-overlay.active { opacity: 1; pointer-events: auto; }
         .popup { background: white; border-radius: 20px; padding: 25px; text-align: left; width: 300px; border: 3px solid #ff6b81; }
-        
-        .letter-box { background: #fff0f3; padding: 15px; border-radius: 15px; text-align: left; margin-top: 10px; font-size: 14px; }
         .proposal-box { margin-top: 25px; padding-top: 15px; border-top: 2px dashed #ffd1dc; }
         .yes-btn { background: #2ed573; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold; }
         .no-btn { background: #ff4757; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold; position: absolute; }
@@ -57,6 +62,7 @@
     </div>
 
     <div id="quiz-screen" class="hidden">
+        <div class="progress-bar-container"><div class="progress-bar" id="progress-bar"></div></div>
         <h1 id="question-title">Pytanie</h1>
         <div class="img-container"><img id="question-img" src=""></div>
         <div id="options-container"></div>
@@ -66,7 +72,6 @@
     <div id="end-screen" class="hidden">
         <h1>Brawo Kotek! 💕</h1>
         
-        <!-- Wirtualny Prezent -->
         <div id="gift-section">
             <div class="gift-box" onclick="openGift()" id="gift-box">🎁</div>
             <div id="gift-reveal" class="hidden gift-msg">To ja jestem Twoim najlepszym prezentem! ❤️</div>
@@ -77,9 +82,11 @@
             <div id="letter-placeholder" class="letter-box hidden">
                 <p>Koteczek mój, wreszcie Twoja wymarzona osiemnastka! 🎉 ...</p>
                 <div class="proposal-box">
-                    <p>Zostaniesz moją księżniczką na zawsze? 👑</p>
-                    <button class="yes-btn" id="yes-btn" onclick="sayYes()">TAK! ❤️</button>
-                    <button class="no-btn" id="no-btn" onclick="moveNoButton()" onmouseover="moveNoButton()">NIE</button>
+                    <p style="text-align:center; margin-bottom:10px;">Zostaniesz moją księżniczką na zawsze? 👑</p>
+                    <div style="position:relative; min-height:60px; display:flex; justify-content:center; align-items:center;">
+                        <button class="yes-btn" id="yes-btn" onclick="sayYes()">TAK! ❤️</button>
+                        <button class="no-btn" id="no-btn" onclick="moveNoButton()" onmouseover="moveNoButton()">NIE</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,34 +94,78 @@
 </div>
 
 <script>
-    // Muzyka
-    const music = document.getElementById('bg-music');
+    // Konfiguracja Quizu
+    const questions = [
+        { title: "Pamiętasz nasz inside joke z pierwszej randki?", img: "daf656bf-4d72-4885-abd3-1e6ae2b4f0f3.jpg", options: ["Freddy", "Śpuścizna", "Domynyk"], correct: 1 },
+        { title: "Myślisz że co najbardziej w tobie kocham?", img: "4dd97ca3-9778-4ef4-83f7-943d0f84a3b4.jpg", options: ["Oczy", "Charakter", "Całaaa ciebie"], correct: 2 },
+        { title: "Kto jest moim takim słodkim koteczkiem?", img: "eeab52ec-576e-4877-bef6-02a1d2bcfa52.jpg", options: ["Jesteś taki głupi", "No jaaaa misiu", "Jezu jak ty mnie wkurzasz"], correct: 1 }
+    ];
+
+    let currentQ = 0;
     let isPlaying = false;
+    const music = document.getElementById('bg-music');
+
     function toggleMusic() {
         if (isPlaying) { music.pause(); document.getElementById('m-text').innerText = "Włącz muzykę"; isPlaying = false; }
         else { music.play(); document.getElementById('m-text').innerText = "Wyłącz muzykę"; isPlaying = true; }
     }
 
-    // Prezent
-    function openGift() {
-        const box = document.getElementById('gift-box');
-        box.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            box.classList.add('hidden');
-            document.getElementById('gift-reveal').classList.remove('hidden');
-            document.getElementById('after-gift').classList.remove('hidden');
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }, 500);
+    function startQuiz() { document.getElementById('popup-overlay').classList.add('active'); }
+
+    function closePopup() {
+        document.getElementById('popup-overlay').classList.remove('active');
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQuestion();
     }
 
-    // Dodaj to do CSS (animacja drżenia)
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }`;
-    document.head.appendChild(style);
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('question-title').innerText = q.title;
+        document.getElementById('question-img').src = q.img;
+        const optsCont = document.getElementById('options-container');
+        optsCont.innerHTML = '';
+        document.getElementById('next-btn').classList.add('hidden');
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if (index === q.correct) { btn.style.borderColor = '#2ed573'; document.getElementById('next-btn').classList.remove('hidden'); }
+                else { btn.style.borderColor = '#ff4757'; }
+            };
+            optsCont.appendChild(btn);
+        });
+        document.getElementById('progress-bar').style.width = ((currentQ + 1) / questions.length) * 100 + '%';
+    }
 
-    // Reszta logiki (Quiz, popups, uciekający przycisk) działa tak samo jak poprzednio...
-    // [Wklej tutaj pozostałą logikę z poprzedniego kodu]
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) { loadQuestion(); }
+        else { document.getElementById('quiz-screen').classList.add('hidden'); document.getElementById('end-screen').classList.remove('hidden'); confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
+    }
+
+    function openGift() {
+        document.getElementById('gift-box').style.display = 'none';
+        document.getElementById('gift-reveal').classList.remove('hidden');
+        document.getElementById('after-gift').classList.remove('hidden');
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function openLetter() { document.getElementById('envelope-container').classList.add('hidden'); document.getElementById('letter-placeholder').classList.remove('hidden'); }
+
+    function moveNoButton() {
+        const noBtn = document.getElementById('no-btn');
+        const x = Math.floor(Math.random() * 150) - 75;
+        const y = Math.floor(Math.random() * 50) - 25;
+        noBtn.style.transform = `translate(${x}px, ${y}px) scale(0.8)`;
+    }
+
+    function sayYes() {
+        alert("Wiedziałem! Kocham Cię najmocniej! 👑❤️");
+        confetti({ particleCount: 200, spread: 100 });
+    }
 </script>
-
 </body>
 </html>
