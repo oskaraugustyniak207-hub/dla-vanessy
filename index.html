@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dla Vanessy ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Biblioteka do konfetti na koniec -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -17,19 +19,37 @@
             align-items: center;
             padding: 20px 15px;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        body::before, body::after {
-            content: "❤️";
+        /* Pływające serduszka w tle */
+        .floating-heart {
             position: absolute;
-            font-size: 90px;
-            opacity: 0.15;
-            z-index: 0;
+            bottom: -50px;
+            color: rgba(255, 107, 129, 0.35);
+            font-size: 24px;
+            user-select: none;
             pointer-events: none;
+            z-index: 0;
+            animation: floatUp 8s linear infinite;
         }
-        body::before { top: 10%; left: 5%; transform: rotate(-20deg); }
-        body::after { bottom: 10%; right: 5%; transform: rotate(15deg); }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.8;
+            }
+            85% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-115vh) rotate(360deg) scale(1.4);
+                opacity: 0;
+            }
+        }
 
         .card {
             background: rgba(255, 255, 255, 0.94);
@@ -138,6 +158,9 @@
 </head>
 <body>
 
+<!-- Kontener na pływające serca -->
+<div id="hearts-container"></div>
+
 <div class="card" id="main-card">
     <div id="start-screen">
         <div>
@@ -180,6 +203,26 @@
 </div>
 
 <script>
+    // Generowanie pływających serduszek w tle
+    const heartsContainer = document.getElementById('hearts-container');
+    const heartSymbols = ['❤️', '💖', '💕', '💗', '✨'];
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+        heart.style.fontSize = (Math.random() * 18 + 18) + 'px';
+        heartsContainer.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 10000);
+    }
+
+    setInterval(createHeart, 600);
+
     const questions = [
         {
             title: "Pamiętasz nasz inside joke z pierwszej randki?",
@@ -296,8 +339,38 @@
             } else {
                 document.getElementById('quiz-screen').classList.add('hidden');
                 document.getElementById('end-screen').classList.remove('hidden');
+                triggerCelebration();
             }
         });
+    }
+
+    // Efekt eksplozji konfetti na koniec
+    function triggerCelebration() {
+        if (typeof confetti === 'function') {
+            const duration = 3 * 1000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff6b81', '#ffd1dc', '#ff4757']
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff6b81', '#ffd1dc', '#ff4757']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
     }
 </script>
 
